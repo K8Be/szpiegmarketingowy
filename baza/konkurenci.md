@@ -1,42 +1,56 @@
 # Baza konkurentów — Pracownia Gier Szkoleniowych
 
-Żywy dokument. Aktualizowany przyrostowo przy każdym raporcie. Ostatnia aktualizacja: **2026-07-09**.
+Żywy dokument. Źródło bazowe: lista klienta `konkurencja_pracownia_gier_v4` (22 firmy). Aktualizowany przyrostowo przy każdym raporcie.
+**Ostatnia aktualizacja: 2026-07-09.**
 
-## Koszyk A — Autorskie gry i symulacje szkoleniowe
-| Firma | WWW | Specjalizacja | Uwagi |
-|---|---|---|---|
-| Games4Biz | games4biz.pl | Gry zespołowe/integracyjne | Bezpośredni konkurent produktowy |
-| LeanQ Team | gry.lean.info.pl | Gry lean / produkcja | Silna nisza lean, słabo nas tam widać |
-| Conlea | conlea.pl | Gry symulacyjne | — |
-| Homo Creatore | homocreatore.pl | Gry szkoleniowe/symulacyjne | — |
-| Future Skills | futureskills.pl | Gry + symulacje biznesowe | — |
-| High5 | high5.pl | Gry symulacyjno-szkoleniowe | — |
+> Uwaga rynkowa (z listy klienta): w tym segmencie B2B komunikacja opiera się niemal w 100% na **LinkedIn + Facebook**. Instagram/TikTok — znikome lub nieaktywne. Monitoring koncentrujemy na LinkedIn (strony firm + posty założycieli/trenerów) i FB.
 
-## Koszyk B — Szkolenia menedżerskie / L&D „wykładowe"
-| Firma | WWW | Specjalizacja | Uwagi |
-|---|---|---|---|
-| House of Skills | houseofskills.pl | Szkolenia menedżerskie, AI dla menedżerów | **Priorytet obserwacyjny.** Jawne ceny/terminy, licencja Harvard ManageMentor, certyfikat „do LinkedIn" |
-| DOOR Poland | door.com.pl | Licencje globalne (FranklinCovey, GTD), VR, symulacje | Odtwórcza oferta licencyjna, 30+ trenerów |
-| Grupa Gamma | projektgamma.pl | Szkolenia + gry teambuilding | Do monitoringu |
+## Koszyk A — Autorskie gry i symulacje szkoleniowe (rdzeń — bezpośrednia konkurencja)
+| Firma | WWW | LinkedIn | Specjalizacja / hity | Uwagi |
+|---|---|---|---|---|
+| **aleGRA (Twórczy Rozwój)** | alegra.pl | [link](https://pl.linkedin.com/company/alegra-tw%C3%B3rczy-rozw%C3%B3j) | Gry strategiczne „Wschód Dzikiego Zachodu", tailor-made | **Priorytet.** Model licencyjny gier; nowa gra „Starożytna świątynia" (w przygotowaniu); ENG wersja WDZ; webinar 11.03.2026 |
+| **MindLab** | mindlab.pl | [link](https://www.linkedin.com/company/mindlab-sp-z-o-o-/) | Autorskie gry „Do Roboty!", „Cyber Shield"; Akademia Menedżera (BBS) | **Priorytet.** Mechanizm „Pokaz gry" (demo leadowe); wertykal MindLab Przemysł; jedyni z aktywnym IG |
+| **Training Projects** | symulacje.edu.pl / trainingprojects.pl | [link](https://www.linkedin.com/company/training-projects/) | Gry menedżerskie, strategiczne, produkcyjne + outdoor | — |
+| **SHtraining** | shtraining.pl | [link](https://www.linkedin.com/company/shtraining/) | Gry planszowe i komputerowe dla kadry menedżerskiej | — |
+| **EITT Szkolenia** | eitt.pl | [link](https://www.linkedin.com/company/eitt-szkolenia/) | Gry integracyjne/gamifikacja: „Śledczy", „Maszyna Goldberga" | — |
+| **aleGRA / Akademia Gier** | akademiagier.com | [link](https://www.linkedin.com/company/akademia-gier/) | Autorskie gry (w tym planszowe) rozwijające kompetencje miękkie | — |
+| **Teamlabs** | teamlabs.pl | [link](https://www.linkedin.com/company/teamlabs/) | Gry szkoleniowe, symulacje, grywalizacja; przywództwo/komunikacja | — |
+| **Inprogress (Design Lab)** | inprogress.pl | [link](https://www.linkedin.com/company/inprogress/) | Symulacje PM/proces: Apollo 13, Colosseum, Scrum Droid + akredytacje (Agile/Scrum/ITIL) | — |
+| **Engage 4Results** | engage4results.pl | [link](https://www.linkedin.com/company/engage-4results/) | Symulacja SysTeamsChange; zarządzanie zmianą, rozwój liderów | — |
 
-## Koszyk C — Teambuilding / event / integracje
-| Firma | WWW | Specjalizacja | Uwagi |
-|---|---|---|---|
-| Argentum Event | argentum-event.pl | Wyjazdy integracyjne, team building | 10 scenariuszy/sezon 2026 |
-| Fabryka Atrakcji | fabryka-atrakcji.com | Eventy firmowe, team building | Skala logistyczna |
-| Challenge Box | challengebox.eu | Autorskie gry teambuildingowe | Ma własne gry — obserwować |
-| TeamLabs | teamlabs.pl | Warsztaty team building | 25+ lat |
-| Catalyst Poland | catalystteambuilding.pl | 100+ programów integracyjnych | — |
-| Exploring.pl | exploring.pl | Gry terenowe, survival, łucznictwo | — |
-| Integra | (do uzupełnienia) | Teambuilding/integracje | Wskazana przez klienta — potwierdzić domenę |
+## Koszyk A2 — Symulacje cyfrowe / online (SaaS)
+| Firma | WWW | LinkedIn | Specjalizacja | Uwagi |
+|---|---|---|---|---|
+| **Revas** | revas.pl / revas.online | [link](https://www.linkedin.com/company/revas/) | Wirtualne symulacje biznesowe (20+ branż), model online/SaaS | Silni w edukacji (uczelnie); 2026: funkcja „Mentor", konkurs BOSS 2026. Inny model niż nasz (cyfrowy vs. facylitowany) |
 
-## Nasze atuty (Pracownia) — do wykorzystania w kontrze
-- **Wygr.AI** — autorska gra o AI (OdkrywAI 1,5h / Korzyst.AI 4h, 6–100 os.), ekspert Radosław Brzózka. Najmocniejszy „trendowy" produkt.
-- **Cosmopolis** — nowa gra integracyjna.
-- **Honey Rush** — gra integracyjna dla dużych zespołów.
-- **Vouchery 2026** — łączą grę integracyjną z warsztatem Gallupa.
+## Koszyk B — Szkolenia menedżerskie / L&D „wykładowe" i premium
+| Firma | WWW | LinkedIn | Specjalizacja | Uwagi |
+|---|---|---|---|---|
+| **House of Skills** | houseofskills.pl | [link](https://www.linkedin.com/company/house-of-skills/) | Szkolenia menedżerskie; wyłączny partner szwedzkiego **Celemi**; „AI dla menedżerów" (Harvard ManageMentor) | **Priorytet obserwacyjny.** Jawne ceny/terminy, certyfikat „do LinkedIn" |
+| **Firma Szkoleniowa Gamma** | projektgamma.pl | [link](https://www.linkedin.com/company/firma-szkoleniowa-gamma/) | Szeroka oferta + gry symulacyjne, edutainment, grywalizacja, TB online | Bardzo aktywni contentowo |
+| **Nowe Motywacje** | nowemotywacje.pl | [link](https://www.linkedin.com/company/nowe-motywacje/) | Szkolenia + EduTech (e-learning, aplikacje), automotive, transformacja | Mocne EduTech/e-learning |
+| **Projekt Przywództwo** | projektprzywodztwo.com | [link](https://www.linkedin.com/company/projekt-przywodztwo/) | Szkolenia menedżerskie premium; gry z Harvard/Columbia | Pozycjonowanie premium |
+| **Sigla Consulting** | sigla-consulting.pl | [link](https://www.linkedin.com/company/sigla-consulting-sp-z-o-o/) | Transformacja, Lean; gry symulacyjne dla liderów zmiany | — |
+| **TrainingPartners** | trenerzy.pl | [link](https://www.linkedin.com/company/trainingpartners-polska/) | Teambuilding warsztatowy pod cele biznesowe | — |
+
+## Koszyk C — Experiential / teambuilding / event / integracje
+| Firma | WWW | LinkedIn | Specjalizacja | Uwagi |
+|---|---|---|---|---|
+| **Exprofesso → Catalyst Poland** | exprofesso.pl / catalystteambuilding.pl | [link](https://pl.linkedin.com/company/exprofesso) | Experiential/edutainment; wyłączny licencjobiorca **Catalyst Global** | **Priorytet.** Rebranding Exprofesso→Catalyst Poland; nagrody MP Power Awards; TB online dla zespołów rozproszonych |
+| **Teamformacja** | teamformacja.pl | [link](https://www.linkedin.com/company/teamformacja/) | Zaawansowany teambuilding, grywalizacja, fabuła | — |
+| **Projekt Efektywny** | projektefektywny.pl | [link](https://www.linkedin.com/company/projekt-efektywny/) | Gry miejskie, integracje outdoor, scenariusze fabularne | — |
+| **Active Fun** | activefun.pl | [link](https://www.linkedin.com/company/activefun/) | Integracje, pikniki, gry terenowe przygodowe | — |
+| **Hunter Extreme** | hunterextreme.pl | brak | Ekstremalny TB, survival, gry militarno-przygodowe | Brak aktywnego LinkedIn |
+
+## Nasze atuty (Pracownia) — do kontry
+- **Wygr.AI** — autorska gra o AI (OdkrywAI 1,5h / Korzyst.AI 4h, 6–100 os.), ekspert Radosław Brzózka. Najmocniejszy „trendowy" produkt — nikt z listy nie ma dedykowanej gry o AI.
+- **Cosmopolis** — nowa gra integracyjna. **Honey Rush** — dla dużych zespołów.
+- **Vouchery 2026** — gra integracyjna + warsztat Gallupa.
 - Pozycja pioniera rynku gier szkoleniowych w PL (od 2004), Warszawa.
 
-## Do domknięcia w kolejnych tygodniach
-- Potwierdzić dokładną tożsamość „Grupa Odyseja" wskazaną przez klienta (search zwrócił głównie Odyseję Umysłu — edukacja młodzieży, prawdopodobnie inna firma).
-- Zweryfikować „Integra", „Elenoa", „Fabryka Motywacji", „Team Building Company" — słabe/brak trafień w web search; ustalić realne domeny.
+## Priorytety obserwacyjne (monitoring co tydzień)
+1. **aleGRA** — premiera „Starożytna świątynia", kolejne webinary.
+2. **MindLab** — nowe gry (Cyber Shield/cyberbezpieczeństwo, Przemysł), terminy „Pokazów gry".
+3. **House of Skills** — nowe produkty/terminy AI.
+4. **Exprofesso/Catalyst Poland** — jak domykają rebranding (okno na przejęcie części komunikacji).
+5. **Revas** — ruchy w stronę biznesu (nie tylko edukacja) i AI w symulacjach.
