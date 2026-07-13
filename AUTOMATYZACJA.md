@@ -37,15 +37,30 @@ Cel: co **wtorek 9:00** raport generuje się sam i **automatycznie ląduje w udo
    `https://drive.google.com/drive/folders/`**`1AbCdEfGhIjKlMnOpQr`** → ID = `1AbCdEfGhIjKlMnOpQr`.
 
 ### 5. Ustaw zmienne środowiskowe w Claude Code
-W **konfiguracji środowiska** (Environment → Environment Variables / Secrets):
+Konfiguracja jest w interfejsie **claude.ai/code** (nie w Google, nie w GitHubie).
+
+**Jak wejść do ustawień środowiska:**
+1. Wejdź na **https://claude.ai/code**.
+2. Kliknij **ikonę chmury z nazwą bieżącego środowiska** → otworzy się lista środowisk.
+3. **Najedź** na swoje środowisko → po prawej kliknij **ikonę ustawień (zębatka)**.
+4. W oknie znajdź pole **Environment variables** (zmienne środowiskowe).
+
+**Co wpisać** — format `.env`, jedna para `KLUCZ=wartość` na linię, **bez cudzysłowów**:
 
 | Zmienna | Wartość | Wymagana |
 |---|---|---|
 | `DRIVE_FOLDER_ID` | ID folderu z kroku 4.3 | ✅ tak |
-| `GOOGLE_SERVICE_ACCOUNT_JSON` | **cała treść** pliku JSON z kroku 3.3 (wklej jako sekret) | ✅ tak |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | cała treść pliku JSON z kroku 3.3, **w jednej linii** | ✅ tak |
 | `DRIVE_AS_GOOGLE_DOC` | `1` = Google Doc (domyślnie) / `0` = surowy .html | nie |
 
-> **Sekretów nie wklejaj do czatu** — wyłącznie do konfiguracji środowiska. Klucz konta serwisowego można w każdej chwili unieważnić w Google Cloud, a dostęp odebrać, usuwając konto z udostępnienia folderu.
+**Spłaszczenie klucza JSON do jednej linii** (plik z Google jest wielolinijkowy, a wartość musi być w jednej linii). Komenda kopiuje plik do schowka — klucz nie opuszcza Twojego komputera:
+
+- **Windows (PowerShell):** `(Get-Content -Raw "C:\sciezka\klucz.json") -replace "\r?\n","" | Set-Clipboard`
+- **Mac (Terminal):** `tr -d '\n' < ~/Downloads/klucz.json | pbcopy`
+
+Następnie wklej zawartość schowka zaraz po `GOOGLE_SERVICE_ACCOUNT_JSON=` i zapisz.
+
+> **Sekretów nie wklejaj do czatu** — wyłącznie do ustawień środowiska. Uwaga: Claude Code nie ma jeszcze dedykowanego sejfu na sekrety — zmienne widzi każdy, kto może edytować to środowisko (przy koncie prywatnym: tylko Ty). Klucz można w każdej chwili unieważnić w Google Cloud, a dostęp odebrać, usuwając konto usługi z udostępnienia folderu.
 
 ## Test ręczny (gdy ustawisz zmienne)
 ```bash
