@@ -1,80 +1,49 @@
-# Automatyzacja — cotygodniowy raport prosto na Twój Google Drive
+# Automatyzacja — cotygodniowy raport mailem (Resend)
 
-Cel: co **wtorek 9:00** raport generuje się sam i **automatycznie ląduje w udostępnionym folderze** na Twoim Google Drive (jako Google Doc). Twój udział po jednorazowym setupie: **zero**.
+Cel: co **wtorek 9:00** raport generuje się sam i **automatycznie wychodzi mailem**. Twój udział po jednorazowym setupie: **zero**.
+
+> **Dlaczego nie Google Drive?** Próbowaliśmy wariantu z kontem usługi (service account). Na **prywatnym Gmailu to niemożliwe**: konto usługi ma 0 GB własnego miejsca i nie może zapisać pliku (błąd `storageQuotaExceeded`), a przenieść własności pliku na Twoje 15 GB można tylko w Google Workspace. Dlatego dostarczamy mailem. (Skrypt `upload_to_drive.py` zostaje w repo, ale jest nieaktywny.)
 
 ## Jak to działa (2 klocki)
-1. **Harmonogram (trigger, cron `0 9 * * 2`)** — odpala świeżą sesję Claude Code, która robi research (ostatnie 7 dni), aktualizuje bazę konkurentów i generuje nowy raport + wersję czytelną (HTML).
-2. **Upload** — ta sama sesja uruchamia `upload_to_drive.py`, który przez **Google Drive API** (konto serwisowe) wgrywa najnowszy raport do jednego, wskazanego folderu. Domyślnie konwertuje go do **Google Doc** (otwierasz i edytujesz wprost w Drive).
+1. **Harmonogram (trigger, cron `0 9 * * 2`)** — odpala świeżą sesję Claude Code, która robi research (ostatnie 7 dni), aktualizuje bazę konkurentów i generuje nowy raport + wersję e-mail (HTML).
+2. **Wysyłka** — ta sama sesja uruchamia `send_report.py`, który wysyła najnowszy raport przez **Resend API** (po HTTPS).
 
-## Setup jednorazowy (ok. 15 min) — po Twojej stronie
-> Nazwy menu podane wg **polskiego** panelu Google Cloud (w nawiasach oryginał EN).
+## Setup jednorazowy — po Twojej stronie
 
-### 1. Utwórz projekt i włącz Google Drive API
-1. Wejdź na **https://console.cloud.google.com**.
-2. U góry, przy logo, kliknij selektor projektu → **Nowy projekt** → nazwa (np. „Szpieg Marketingowy") → **Utwórz**. Poczekaj i przełącz się na ten projekt.
-3. Menu ☰ (lewy górny róg) → **Interfejsy API i usługi** (*APIs & Services*) → **Biblioteka** (*Library*).
-4. Wpisz **Google Drive API** → wejdź → **Włącz** (*Enable*).
+### Krok 1 — konto i klucz Resend (~5 min)
+1. Załóż darmowe konto na **https://resend.com** (free tier: 3 000 maili/mies.).
+2. **API Keys → Create API Key** → skopiuj klucz (zaczyna się od `re_...`).
 
-### 2. Utwórz konto usługi (service account) — OMIJAJĄC ekran zgody OAuth
-> ⚠️ **Tu się zwykle blokujesz.** Na stronie „Dane logowania" Google namawia na **„Skonfiguruj ekran zgody OAuth"** (*Configure consent screen*). **NIE klikaj tego** — dla konta usługi jest zbędne. Idź dokładnie tak:
-
-1. Menu ☰ → **Interfejsy API i usługi** → **Dane logowania** (*Credentials* — tak Google tłumaczy „Credentials"!).
-2. U góry kliknij **+ Utwórz dane logowania** (*+ Create credentials*) → z listy wybierz **Konto usługi** (*Service account*).
-   - *(Alternatywnie, jeśli nie widzisz tej opcji: menu ☰ → **Uprawnienia (IAM) i administracja** → **Konta usługi** → **+ Utwórz konto usługi**.)*
-3. **Nazwa konta usługi** (*Service account name*): np. `raport-bot` → **Utwórz i kontynuuj** (*Create and continue*).
-4. Krok „Przyznaj temu kontu dostęp…" (*Grant access* — role) → **pomiń**, kliknij **Dalej/Kontynuuj**, a potem **Gotowe** (*Done*). Rola nie jest tu potrzebna — dostęp nadasz przez udostępnienie folderu.
-
-### 3. Wygeneruj klucz JSON
-1. Na liście **Konta usługi** kliknij utworzone `raport-bot@...`.
-2. Zakładka **Klucze** (*Keys*) → **Dodaj klucz** (*Add key*) → **Utwórz nowy klucz** (*Create new key*).
-3. Typ **JSON** → **Utwórz**. Pobierze się plik `.json` — **to jest sekret**, trzymaj bezpiecznie.
-4. Skopiuj **adres e-mail** konta usługi (widoczny na liście / w „Szczegóły"), np. `raport-bot@twoj-projekt.iam.gserviceaccount.com`.
-
-### 4. Udostępnij botowi folder na Drive
-1. Na **https://drive.google.com** utwórz folder (np. „Raporty wywiadowcze").
-2. Prawy klik na folder → **Udostępnij** (*Share*) → wklej adres e-mail konta usługi z kroku 3.4 → ustaw rolę **Edytor** (*Editor*) → **Wyślij/Gotowe**.
-3. Wejdź do folderu i z paska adresu skopiuj jego **ID** — ciąg po `/folders/`, np.
-   `https://drive.google.com/drive/folders/`**`1AbCdEfGhIjKlMnOpQr`** → ID = `1AbCdEfGhIjKlMnOpQr`.
-
-### 5. Ustaw zmienne środowiskowe w Claude Code
-Konfiguracja jest w interfejsie **claude.ai/code** (nie w Google, nie w GitHubie).
-
-**Jak wejść do ustawień środowiska:**
-1. Wejdź na **https://claude.ai/code**.
-2. Kliknij **ikonę chmury z nazwą bieżącego środowiska** → otworzy się lista środowisk.
-3. **Najedź** na swoje środowisko → po prawej kliknij **ikonę ustawień (zębatka)**.
-4. W oknie znajdź pole **Environment variables** (zmienne środowiskowe).
-
-**Co wpisać** — format `.env`, jedna para `KLUCZ=wartość` na linię, **bez cudzysłowów**:
+### Krok 2 — ustaw zmienną w Claude Code
+Wejdź w ustawienia środowiska (**claude.ai/code** → ikona chmury z nazwą środowiska → najedź → zębatka → **Environment variables**) i dodaj:
 
 | Zmienna | Wartość | Wymagana |
 |---|---|---|
-| `DRIVE_FOLDER_ID` | ID folderu z kroku 4.3 | ✅ tak |
-| `GOOGLE_SERVICE_ACCOUNT_JSON` | cała treść pliku JSON z kroku 3.3, **w jednej linii** | ✅ tak |
-| `DRIVE_AS_GOOGLE_DOC` | `1` = Google Doc (domyślnie) / `0` = surowy .html | nie |
+| `RESEND_API_KEY` | klucz `re_...` z kroku 1 | ✅ tak |
+| `REPORT_TO` | adres odbiorcy | nie (domyślnie `marketing@pracowniagier.com`) |
+| `REPORT_FROM` | nadawca (patrz niżej) | nie |
 
-**Spłaszczenie klucza JSON do jednej linii** (plik z Google jest wielolinijkowy, a wartość musi być w jednej linii). Komenda kopiuje plik do schowka — klucz nie opuszcza Twojego komputera:
+> Zmienne po Drive (`DRIVE_FOLDER_ID`, `GOOGLE_SERVICE_ACCOUNT_JSON`) możesz **usunąć** — nie są już używane. Dla higieny warto też **unieważnić klucz konta usługi** w Google Cloud (Konta usługi → klucze → usuń).
 
-- **Windows (PowerShell):** `(Get-Content -Raw "C:\sciezka\klucz.json") -replace "\r?\n","" | Set-Clipboard`
-- **Mac (Terminal):** `tr -d '\n' < ~/Downloads/klucz.json | pbcopy`
+### Krok 3 — wybór trybu wysyłki
+Resend ma dwa tryby:
 
-Następnie wklej zawartość schowka zaraz po `GOOGLE_SERVICE_ACCOUNT_JSON=` i zapisz.
+**A) Szybki test (bez własnej domeny) — działa od razu**
+- Nadawca pozostaje domyślny `onboarding@resend.dev`.
+- ⚠️ Ograniczenie Resend: bez zweryfikowanej domeny możesz wysyłać **tylko na adres e-mail, którym założyłaś konto Resend** (czyli najpewniej Twój Gmail). Ustaw wtedy `REPORT_TO` = ten sam adres.
 
-> **Sekretów nie wklejaj do czatu** — wyłącznie do ustawień środowiska. Uwaga: Claude Code nie ma jeszcze dedykowanego sejfu na sekrety — zmienne widzi każdy, kto może edytować to środowisko (przy koncie prywatnym: tylko Ty). Klucz można w każdej chwili unieważnić w Google Cloud, a dostęp odebrać, usuwając konto usługi z udostępnienia folderu.
+**B) Docelowo na `marketing@pracowniagier.com` — wymaga weryfikacji domeny**
+- W Resend: **Domains → Add Domain** → `pracowniagier.com` → dodaj wskazane rekordy **DNS** (SPF, DKIM) u operatora domeny. Po weryfikacji:
+  - ustaw `REPORT_FROM` = `Szpieg Marketingowy <raport@pracowniagier.com>`,
+  - `REPORT_TO` = `marketing@pracowniagier.com`.
+- Wtedy maile wychodzą z domeny firmy i nie wpadają do spamu.
 
-## Test ręczny (gdy ustawisz zmienne)
+## Test ręczny (gdy ustawisz klucz)
 ```bash
-python3 upload_to_drive.py --dry-run   # podgląd: co i do jakiego folderu (bez uploadu)
-python3 upload_to_drive.py             # realny upload najnowszego raportu
+python3 send_report.py --dry-run   # podgląd: co i do kogo (bez wysyłki)
+python3 send_report.py             # realna wysyłka najnowszego raportu
 ```
-Skrypt sam doinstaluje potrzebne biblioteki (`google-auth`, `requests`), jeśli ich brak.
 
-## Zakres uprawnień (bezpieczeństwo)
-- Skrypt używa scope `drive.file` — może operować **tylko na plikach, które sam utworzy** w udostępnionym folderze. Nie ma wglądu w resztę Twojego dysku.
-
-## Awaryjnie / gdy coś nie zadziała
-- Brak `DRIVE_FOLDER_ID` lub klucza → skrypt kończy się z jasnym komunikatem, a raport **i tak jest wygenerowany i zapisany w repo** (nic nie ginie).
-- Błąd Drive API (np. konto serwisowe nie ma dostępu do folderu) → kod `3` + treść odpowiedzi Google w logu (najczęściej: dodaj konto serwisowe do udostępnienia folderu jako Edytor).
-
----
-*Wysyłka mailem (`send_report.py`, Resend) pozostaje w repo jako opcjonalny, nieaktywny kanał zapasowy — obecny harmonogram używa wyłącznie Google Drive.*
+## Awaryjnie
+- Brak `RESEND_API_KEY` → skrypt kończy się jasnym komunikatem; raport i tak jest wygenerowany i zapisany w repo (nic nie ginie).
+- Błąd API (np. wysyłka na obcy adres bez weryfikacji domeny) → kod `3` + treść odpowiedzi Resend w logu (najczęściej: użyj trybu A albo zweryfikuj domenę = tryb B).
