@@ -27,7 +27,11 @@ import json
 import subprocess
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SCOPES = ["https://www.googleapis.com/auth/drive.file"]
+# Pełny scope 'drive' jest konieczny, by konto usługi mogło pisać do folderu
+# UDOSTĘPNIONEGO ręcznie przez UI (scope 'drive.file' widzi tylko pliki utworzone
+# przez samą aplikację). Konto usługi ma własny, pusty dysk, więc realnie i tak
+# operuje wyłącznie na tym, co mu udostępnisz.
+SCOPES = ["https://www.googleapis.com/auth/drive"]
 GOOGLE_DOC_MIME = "application/vnd.google-apps.document"
 UPLOAD_URL = ("https://www.googleapis.com/upload/drive/v3/files"
               "?uploadType=multipart&fields=id,name,webViewLink")
@@ -45,6 +49,17 @@ def _ensure_deps():
         )
 
 
+def clean_folder_id(value):
+    """Wyłuskuje czyste ID folderu, nawet gdy wklejono cały URL lub ID z '?hl=pl'."""
+    if not value:
+        return value
+    value = value.strip()
+    if "folders/" in value:
+        value = value.split("folders/", 1)[1]
+    # utnij wszystko od pierwszego znaku granicznego (?, &, /, #, spacja)
+    return re.split(r"[?&/#\s]", value)[0]
+
+
 def newest_report():
     """Najnowszy plik e-mail HTML (czytelna wersja); fallback: najnowszy raport .md."""
     html = sorted(glob.glob(os.path.join(BASE_DIR, "raporty", "*-email-do-marketingu.html")))
@@ -56,7 +71,7 @@ def newest_report():
 
 def main():
     dry = "--dry-run" in sys.argv
-    folder_id = os.environ.get("DRIVE_FOLDER_ID")
+    folder_id = clean_folder_id(os.environ.get("DRIVE_FOLDER_ID"))
     as_doc = os.environ.get("DRIVE_AS_GOOGLE_DOC", "1") != "0"
 
     path = newest_report()
