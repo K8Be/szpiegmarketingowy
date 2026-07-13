@@ -66,7 +66,13 @@ def main():
     req = urllib.request.Request(
         RESEND_ENDPOINT,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            # Cloudflare przed Resend blokuje domyslny UA Pythona (403 error code 1010).
+            "User-Agent": "Mozilla/5.0 (compatible; PracowniaGier-Raport/1.0)",
+        },
         method="POST",
     )
     try:
