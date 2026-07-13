@@ -7,27 +7,42 @@ Cel: co **wtorek 9:00** raport generuje się sam i **automatycznie ląduje w udo
 2. **Upload** — ta sama sesja uruchamia `upload_to_drive.py`, który przez **Google Drive API** (konto serwisowe) wgrywa najnowszy raport do jednego, wskazanego folderu. Domyślnie konwertuje go do **Google Doc** (otwierasz i edytujesz wprost w Drive).
 
 ## Setup jednorazowy (ok. 15 min) — po Twojej stronie
+> Nazwy menu podane wg **polskiego** panelu Google Cloud (w nawiasach oryginał EN).
 
-### 1. Utwórz konto serwisowe w Google Cloud
-1. Wejdź na **https://console.cloud.google.com** → utwórz projekt (np. „Szpieg Marketingowy").
-2. **APIs & Services → Enable APIs → włącz „Google Drive API"**.
-3. **APIs & Services → Credentials → Create credentials → Service account**. Nadaj nazwę (np. `raport-bot`).
-4. Wejdź w utworzone konto serwisowe → zakładka **Keys → Add key → Create new key → JSON**. Pobierze się plik `.json`. To jest sekret — trzymaj bezpiecznie.
-5. Zapisz adres e-mail konta serwisowego (wygląda tak: `raport-bot@twoj-projekt.iam.gserviceaccount.com`).
+### 1. Utwórz projekt i włącz Google Drive API
+1. Wejdź na **https://console.cloud.google.com**.
+2. U góry, przy logo, kliknij selektor projektu → **Nowy projekt** → nazwa (np. „Szpieg Marketingowy") → **Utwórz**. Poczekaj i przełącz się na ten projekt.
+3. Menu ☰ (lewy górny róg) → **Interfejsy API i usługi** (*APIs & Services*) → **Biblioteka** (*Library*).
+4. Wpisz **Google Drive API** → wejdź → **Włącz** (*Enable*).
 
-### 2. Udostępnij mu folder na Drive
-1. Utwórz na Google Drive folder (np. „Raporty wywiadowcze").
-2. Kliknij **Udostępnij** i dodaj adres konta serwisowego z kroku 1.5 jako **Edytor**.
-3. Z adresu URL folderu skopiuj jego **ID** — to ciąg po `/folders/` w linku, np.
+### 2. Utwórz konto usługi (service account) — OMIJAJĄC ekran zgody OAuth
+> ⚠️ **Tu się zwykle blokujesz.** Na stronie „Dane logowania" Google namawia na **„Skonfiguruj ekran zgody OAuth"** (*Configure consent screen*). **NIE klikaj tego** — dla konta usługi jest zbędne. Idź dokładnie tak:
+
+1. Menu ☰ → **Interfejsy API i usługi** → **Dane logowania** (*Credentials* — tak Google tłumaczy „Credentials"!).
+2. U góry kliknij **+ Utwórz dane logowania** (*+ Create credentials*) → z listy wybierz **Konto usługi** (*Service account*).
+   - *(Alternatywnie, jeśli nie widzisz tej opcji: menu ☰ → **Uprawnienia (IAM) i administracja** → **Konta usługi** → **+ Utwórz konto usługi**.)*
+3. **Nazwa konta usługi** (*Service account name*): np. `raport-bot` → **Utwórz i kontynuuj** (*Create and continue*).
+4. Krok „Przyznaj temu kontu dostęp…" (*Grant access* — role) → **pomiń**, kliknij **Dalej/Kontynuuj**, a potem **Gotowe** (*Done*). Rola nie jest tu potrzebna — dostęp nadasz przez udostępnienie folderu.
+
+### 3. Wygeneruj klucz JSON
+1. Na liście **Konta usługi** kliknij utworzone `raport-bot@...`.
+2. Zakładka **Klucze** (*Keys*) → **Dodaj klucz** (*Add key*) → **Utwórz nowy klucz** (*Create new key*).
+3. Typ **JSON** → **Utwórz**. Pobierze się plik `.json` — **to jest sekret**, trzymaj bezpiecznie.
+4. Skopiuj **adres e-mail** konta usługi (widoczny na liście / w „Szczegóły"), np. `raport-bot@twoj-projekt.iam.gserviceaccount.com`.
+
+### 4. Udostępnij botowi folder na Drive
+1. Na **https://drive.google.com** utwórz folder (np. „Raporty wywiadowcze").
+2. Prawy klik na folder → **Udostępnij** (*Share*) → wklej adres e-mail konta usługi z kroku 3.4 → ustaw rolę **Edytor** (*Editor*) → **Wyślij/Gotowe**.
+3. Wejdź do folderu i z paska adresu skopiuj jego **ID** — ciąg po `/folders/`, np.
    `https://drive.google.com/drive/folders/`**`1AbCdEfGhIjKlMnOpQr`** → ID = `1AbCdEfGhIjKlMnOpQr`.
 
-### 3. Ustaw zmienne środowiskowe w Claude Code
+### 5. Ustaw zmienne środowiskowe w Claude Code
 W **konfiguracji środowiska** (Environment → Environment Variables / Secrets):
 
 | Zmienna | Wartość | Wymagana |
 |---|---|---|
-| `DRIVE_FOLDER_ID` | ID folderu z kroku 2.3 | ✅ tak |
-| `GOOGLE_SERVICE_ACCOUNT_JSON` | **cała treść** pliku JSON z kroku 1.4 (wklej jako sekret) | ✅ tak |
+| `DRIVE_FOLDER_ID` | ID folderu z kroku 4.3 | ✅ tak |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | **cała treść** pliku JSON z kroku 3.3 (wklej jako sekret) | ✅ tak |
 | `DRIVE_AS_GOOGLE_DOC` | `1` = Google Doc (domyślnie) / `0` = surowy .html | nie |
 
 > **Sekretów nie wklejaj do czatu** — wyłącznie do konfiguracji środowiska. Klucz konta serwisowego można w każdej chwili unieważnić w Google Cloud, a dostęp odebrać, usuwając konto z udostępnienia folderu.
