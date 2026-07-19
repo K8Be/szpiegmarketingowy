@@ -1,11 +1,11 @@
 # Automatyzacja — cotygodniowy raport mailem (Resend)
 
-Cel: co **wtorek 9:00** raport generuje się sam i **automatycznie wychodzi mailem**. Twój udział po jednorazowym setupie: **zero**.
+Cel: co **poniedziałek 4:00 (czasu polskiego)** raport generuje się sam i **automatycznie wychodzi mailem**. Twój udział po jednorazowym setupie: **zero**.
 
 > **Dlaczego nie Google Drive?** Próbowaliśmy wariantu z kontem usługi (service account). Na **prywatnym Gmailu to niemożliwe**: konto usługi ma 0 GB własnego miejsca i nie może zapisać pliku (błąd `storageQuotaExceeded`), a przenieść własności pliku na Twoje 15 GB można tylko w Google Workspace. Dlatego dostarczamy mailem. (Skrypt `upload_to_drive.py` zostaje w repo, ale jest nieaktywny.)
 
 ## Jak to działa (2 klocki)
-1. **Harmonogram (trigger, cron `0 9 * * 2`)** — odpala świeżą sesję Claude Code, która robi research (ostatnie 7 dni), aktualizuje bazę konkurentów i generuje nowy raport + wersję e-mail (HTML).
+1. **Harmonogram (trigger, cron `0 2 * * 1` w UTC = poniedziałek 4:00 CEST)** — odpala świeżą sesję Claude Code, która robi research (ostatnie 7 dni), aktualizuje bazę konkurentów i generuje nowy raport + wersję e-mail (HTML).
 2. **Wysyłka** — ta sama sesja uruchamia `send_report.py`, który wysyła najnowszy raport przez **Resend API** (po HTTPS).
 
 ## Setup jednorazowy — po Twojej stronie

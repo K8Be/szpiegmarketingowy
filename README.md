@@ -9,7 +9,7 @@ Co tydzień dostarczyć managerowi marketingu skanowalny (20 min) raport:
 3. **Część 3** — 3–5 rekomendacji operacyjnych (co / po co / nakład S/M/L / właściciel)
 
 ## Harmonogram
-Uruchomienie: **każdy wtorek 9:00** (`0 9 * * 2`).
+Uruchomienie: **każdy poniedziałek 4:00 czasu polskiego** (cron `0 2 * * 1` w UTC = 4:00 CEST latem).
 
 ## Struktura repo
 - `raporty/RRRR-MM-DD-raport-wywiadowczy.md` — kolejne wydania (jeden plik na tydzień).
