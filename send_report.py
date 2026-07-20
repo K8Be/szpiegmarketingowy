@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
-"""Wysyła najnowszy tygodniowy raport (HTML) na skrzynkę marketingu przez Resend API.
+"""Wysyła raport mailem przez Resend API (bez zależności poza opcjonalnym 'markdown').
 
-Nie wymaga zależności zewnętrznych (tylko biblioteka standardowa Pythona).
+Użycie:
+  python3 send_report.py                 # wysyła najnowszy raport HTML (raporty/*-email-do-marketingu.html)
+  python3 send_report.py raporty/x.md    # wysyła wskazany plik (.md konwertowany do HTML, .html bez zmian)
+  python3 send_report.py --dry-run [plik]
 
 Zmienne środowiskowe:
   RESEND_API_KEY  (wymagane)  — klucz API z https://resend.com
-  REPORT_TO       (opcjonalne) — adres odbiorcy; domyślnie marketing@pracowniagier.com
-  REPORT_FROM     (opcjonalne) — nadawca; domyślnie testowy onboarding@resend.dev
-                                 Do produkcji ustaw np. "Szpieg Marketingowy <raport@pracowniagier.com>"
-                                 (domena musi być zweryfikowana w Resend).
-
-Użycie:
-  python send_report.py            # wysyła najnowszy raport
-  python send_report.py --dry-run  # tylko pokazuje, co poszłoby (bez wysyłki, bez klucza)
+  REPORT_TO       (opcjonalne) — odbiorca; domyślnie marketing@pracowniagier.com
+  REPORT_FROM     (opcjonalne) — nadawca; domyślnie onboarding@resend.dev (tryb testowy Resend)
 """
 import os
 import re
@@ -20,6 +17,7 @@ import sys
 import glob
 import json
 import datetime
+import subprocess
 import urllib.request
 import urllib.error
 
@@ -32,35 +30,68 @@ def newest_email_html():
     return files[-1] if files else None
 
 
+def md_to_html(md_text):
+    """Konwersja Markdown -> HTML. Próbuje biblioteki 'markdown', w razie braku – prosty fallback."""
+    try:
+        import markdown  # noqa
+    except ImportError:
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", "-q", "markdown"], check=True)
+            import markdown  # noqa
+        except Exception:
+            markdown = None
+    if markdown:
+        body = markdown.markdown(md_text, extensions=["extra", "sane_lists", "nl2br"])
+    else:
+        # Fallback: zachowaj układ w bloku preformatowanym (czytelne, bez utraty treści).
+        import html as _html
+        body = "<pre style='white-space:pre-wrap;font-family:inherit'>" + _html.escape(md_text) + "</pre>"
+    return (
+        "<div style=\"max-width:680px;margin:0 auto;font-family:-apple-system,Segoe UI,Roboto,Arial,"
+        "sans-serif;color:#1a1a1a;line-height:1.5;font-size:15px\">" + body + "</div>"
+    )
+
+
+def load_content(path):
+    """Zwraca (html, data_str) dla wskazanego pliku lub najnowszego raportu."""
+    if not path:
+        path = newest_email_html()
+        if not path:
+            print("BŁĄD: nie znaleziono raportu (raporty/*-email-do-marketingu.html)", file=sys.stderr)
+            sys.exit(1)
+    if not os.path.isabs(path):
+        path = os.path.join(BASE_DIR, path)
+    if not os.path.exists(path):
+        print(f"BŁĄD: plik nie istnieje: {path}", file=sys.stderr)
+        sys.exit(1)
+    with open(path, encoding="utf-8") as f:
+        raw = f.read()
+    html = md_to_html(raw) if path.endswith(".md") else raw
+    m = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(path))
+    date = m.group(1) if m else datetime.date.today().isoformat()
+    return html, date
+
+
 def main():
+    args = [a for a in sys.argv[1:] if a != "--dry-run"]
     dry = "--dry-run" in sys.argv
+    path = args[0] if args else None
+
     api_key = os.environ.get("RESEND_API_KEY")
     to_addr = os.environ.get("REPORT_TO", "marketing@pracowniagier.com")
     from_addr = os.environ.get("REPORT_FROM", "Szpieg Marketingowy <onboarding@resend.dev>")
 
-    path = newest_email_html()
-    if not path:
-        print("BŁĄD: nie znaleziono pliku raportu (raporty/*-email-do-marketingu.html)", file=sys.stderr)
-        sys.exit(1)
-
-    with open(path, encoding="utf-8") as f:
-        html = f.read()
-
-    m = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(path))
-    date = m.group(1) if m else datetime.date.today().isoformat()
+    html, date = load_content(path)
     subject = f"\U0001F575️ Raport wywiadowczy — konkurencja + trendy L&D | {date}"
-
     payload = {"from": from_addr, "to": [to_addr], "subject": subject, "html": html}
 
     if dry:
-        print(f"[dry-run] from   = {from_addr}")
-        print(f"[dry-run] to     = {to_addr}")
-        print(f"[dry-run] subject= {subject}")
-        print(f"[dry-run] plik   = {path} ({len(html)} znaków HTML)")
+        print(f"[dry-run] from={from_addr}\n[dry-run] to={to_addr}\n[dry-run] subject={subject}")
+        print(f"[dry-run] plik={path or '(najnowszy HTML)'} ({len(html)} znaków HTML)")
         return
 
     if not api_key:
-        print("BŁĄD: brak zmiennej środowiskowej RESEND_API_KEY — mail NIE został wysłany.", file=sys.stderr)
+        print("BŁĄD: brak RESEND_API_KEY — mail NIE został wysłany.", file=sys.stderr)
         sys.exit(2)
 
     req = urllib.request.Request(
