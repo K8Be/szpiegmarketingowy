@@ -1,7 +1,9 @@
 # Baza konkurentów — Pracownia Gier Szkoleniowych
 
 Żywy dokument. Źródło bazowe: lista klienta `konkurencja_pracownia_gier_v4` (22 firmy). Aktualizowany przyrostowo przy każdym raporcie.
-**Ostatnia aktualizacja: 2026-07-09.**
+**Ostatnia aktualizacja: 2026-07-20.**
+
+> **Zmiany 2026-07-20 (raport #2):** House of Skills — nowy produkt otwarty „Menedżer w działaniu — warsztat w oparciu o spektakl interaktywny" (wejście w format doświadczeniowy) + nowa „Szkoła trenerów i trenerek biznesu". aleGRA — gra „Starożytna świątynia" przeszła z „w przygotowaniu" do dostępnej (sprzedaż jako narzędzie trenerskie). MindLab — utrzymany lejek „Pokazów Gier"/bezpłatnych wydarzeń + program licencyjny MindLab Games (Cyber Shield rozwijany z firmą Securing).
 
 > Uwaga rynkowa (z listy klienta): w tym segmencie B2B komunikacja opiera się niemal w 100% na **LinkedIn + Facebook**. Instagram/TikTok — znikome lub nieaktywne. Monitoring koncentrujemy na LinkedIn (strony firm + posty założycieli/trenerów) i FB.
 
